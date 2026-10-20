@@ -1,0 +1,57 @@
+# cargo-deny configuration for the TrusTrove Soroban workspace (issue #1025).
+# Enforces repeatable dependency policies across security advisories, licenses,
+# crate bans/duplicate versions, and allowed registry sources.
+#
+# Run locally or in CI with:
+#   cargo deny check
+
+[graph]
+targets = [
+    { triple = "wasm32v1-none" },
+    { triple = "x86_64-unknown-linux-gnu" },
+]
+all-features = true
+
+[advisories]
+db-path = "~/.cargo/advisory-db"
+db-urls = ["https://github.com/rustsec/advisory-db"]
+# Fail on any reported security vulnerability; do not silently ignore advisories.
+yanked = "warn"
+unmaintained = "none"
+unsound = "none"
+ignore = []
+
+[licenses]
+confidence-threshold = 0.8
+# Permissive open-source licenses used across the Rust / Soroban ecosystem.
+allow = [
+    "MIT",
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "ISC",
+    "Unicode-3.0",
+    "Unicode-DFS-2016",
+    "Zlib",
+    "CC0-1.0",
+    "0BSD",
+    "BSL-1.0",
+    "MPL-2.0",
+]
+
+[bans]
+# Warn on duplicate crate versions pulled in transitively by soroban-sdk and test tooling,
+# while keeping visibility on version skew in CI logs.
+multiple-versions = "warn"
+wildcards = "allow"
+highlight = "all"
+deny = []
+skip = []
+skip-tree = []
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
+allow-git = []

@@ -47,4 +47,17 @@ mod test {
         assert!(threshold > 0);
         assert!(extend_to > 0);
     }
+
+    #[test]
+    fn cargo_deny_policy_is_configured() {
+        let deny_toml = include_str!("../../../deny.toml");
+        assert!(deny_toml.contains("[advisories]"));
+        assert!(deny_toml.contains("[licenses]"));
+        assert!(deny_toml.contains("[bans]"));
+        assert!(deny_toml.contains("[sources]"));
+        assert!(deny_toml.contains("ignore = []"));
+        assert!(deny_toml.contains("multiple-versions = \"warn\""));
+        assert!(deny_toml.contains("unknown-registry = \"deny\""));
+        assert!(deny_toml.contains("unknown-git = \"deny\""));
+    }
 }
